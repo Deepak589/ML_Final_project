@@ -1,0 +1,21 @@
+# Python 3.10+. Mac (MPS) for dev, CUDA 12.x on Kaggle for train.
+# faiss-cpu everywhere (faiss-gpu unavailable on Mac). open_clip for ViT-B/32.
+
+torch>=2.2,<2.6
+torchvision>=0.17,<0.21
+transformers>=4.40,<4.50
+open_clip_torch>=2.24,<3.0
+faiss-cpu>=1.8,<2.0
+
+omegaconf>=2.3,<3.0
+h5py>=3.10,<4.0
+pandas>=2.0,<3.0
+pyarrow>=15.0
+numpy>=1.26,<2.2
+Pillow>=10.0
+tqdm>=4.66
+
+tensorboard>=2.16,<3.0
+
+pytest>=8.0
+ruff>=0.5

@@ -1,0 +1,52 @@
+# Baseline joint-embedding config. Fusion = concat (no attention).
+# CLI flags override keys only. Never hardcode these in src/.
+defaults:
+  data: data.yaml
+
+exp_name: baseline_concat
+seed: 42
+device: auto                    # auto -> cuda | mps | cpu
+
+model:
+  embed_dim: 1024               # shared space D, L2-normalized
+  image:
+    in_dim: 512                 # cached CLIP feat dim
+    proj_hidden: 1024
+  text:
+    encoder: distilbert-base-uncased
+    hidden: 768
+    freeze_text: false          # light fine-tune; set true to freeze/ablate
+    share_encoder: true         # one DistilBERT for both streams
+  fusion:
+    mode: concat                # concat | attention | ingr_only
+    hidden: 1024
+    pool: mean                  # ingredient pooling: mean | attention (perm-robust)
+  semantic:
+    enabled: true
+    n_categories: 20
+
+loss:
+  name: infonce                 # infonce | triplet
+  temperature: 0.07
+  lambda_sem: 0.1
+  triplet_margin: 0.3           # used only when name=triplet
+
+train:
+  epochs: 30
+  batch_size: 64
+  lr: 1.0e-4
+  weight_decay: 0.01
+  grad_accum: 1
+  amp: true
+  early_stop_patience: 5        # on val medR
+  num_workers: 4
+
+eval:
+  subsets: [1k, 10k]
+  directions: both              # im2recipe + recipe2im
+  n_folds: 10
+  seed: 1234
+
+log:
+  backend: tensorboard
+  dir: runs
