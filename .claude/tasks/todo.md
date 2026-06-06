@@ -27,12 +27,13 @@
 
 ---
 
-## Phase 0 — Scaffold + env
-1. [ ] Create dir tree: `configs/ src/{data,models,losses,utils} tests/ runs/ notebooks/` → verify: `tree` matches AGENTS.md §4
-2. [ ] `.gitignore` (data/, runs/, *.pt, __pycache__, .DS_Store) → verify: `git status` ignores them
-3. [ ] `requirements.txt` pinned (torch, torchvision, transformers, faiss-cpu, omegaconf, ftfy/clip or open_clip, h5py/lmdb, pytest, ruff) → verify: `pip install -r` clean on Mac
-4. [ ] `configs/{data,baseline,fusion}.yaml` skeletons (OmegaConf) → verify: load + print resolved
-5. [ ] `src/utils/seed.py` (python/numpy/torch/cudnn) + `git init`, first commit → verify: `pytest -q` collects, seed sets reproducibly
+## Phase 0 — Scaffold + env  ✅ DONE (commit 2c3dba1)
+1. [x] Dir tree per AGENTS.md §4
+2. [x] `.gitignore` anchored `/data /runs` (fixed: unanchored matched src/data) → root data/runs ignored, src/data tracked
+3. [x] `requirements.txt` pinned; conda env `food-retrieval` py3.11, torch 2.5.1, faiss-cpu 1.14.2 → install clean
+4. [x] `configs/{data,baseline,fusion}.yaml` (OmegaConf) → load + override tested
+5. [x] `src/utils/{seed,config}.py` + git init + first commit → 5 tests green, ruff clean
+   NOTE: env = `conda run -n food-retrieval <cmd>`. pytest pythonpath set in pyproject.
 
 ## Phase 1 — Data pipeline  (test-first)
 6. [ ] Tiny fixtures: 8 fake recipes + 8 random 512-d "image feats" in `tests/fixtures/` → verify: loadable
