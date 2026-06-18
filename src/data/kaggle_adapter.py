@@ -62,7 +62,7 @@ def load(cfg: DictConfig) -> list[dict]:
             "partition": "",  # filled in next step
         })
 
-    _assign_splits(recipes, cfg.splits, cfg.subset.seed)
+    _assign_splits(recipes, cfg.splits)
     return recipes
 
 
@@ -77,6 +77,7 @@ def _parse_ingredients(raw) -> list[str]:
             return [str(i).strip() for i in parsed if str(i).strip()]
     except (ValueError, SyntaxError):
         pass
+    # NOTE: ingredients containing commas will be split incorrectly; Kaggle CSV uses list literals so this fallback is rarely hit
     # fallback: comma-split
     return [s.strip() for s in raw.split(",") if s.strip()]
 
@@ -95,7 +96,7 @@ def _parse_instructions(raw) -> str:
     return raw
 
 
-def _assign_splits(recipes: list[dict], splits_cfg: DictConfig, seed: int) -> None:
+def _assign_splits(recipes: list[dict], splits_cfg: DictConfig) -> None:
     """Assign 'partition' in-place using deterministic index-based split."""
     n = len(recipes)
     n_train = round(n * splits_cfg.train_frac)
