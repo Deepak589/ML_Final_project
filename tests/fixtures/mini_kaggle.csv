@@ -1,0 +1,11 @@
+Title,Ingredients,Instructions,Image_Name
+Spaghetti Bolognese,"['spaghetti', 'beef mince', 'tomato sauce']",Cook pasta. Brown beef. Mix.,img001
+Chicken Curry,"['chicken', 'curry powder', 'coconut milk']",Fry chicken. Add spices. Simmer.,img002
+Caesar Salad,"['romaine lettuce', 'parmesan', 'croutons']",Toss ingredients with dressing.,img003
+Beef Tacos,"['beef', 'taco shells', 'salsa']",Season beef. Fill shells.,img004
+Mushroom Risotto,"['arborio rice', 'mushrooms', 'parmesan']",Toast rice. Add stock gradually.,img005
+Pancakes,"['flour', 'eggs', 'milk', 'butter']",Mix batter. Fry in pan.,img006
+Greek Salad,"['cucumber', 'tomatoes', 'feta', 'olives']",Chop and combine.,img007
+Lemon Chicken,"['chicken', 'lemon', 'garlic', 'herbs']",Marinate. Roast at 200C.,img008
+Mystery Dish,"['unknown ingredient']",No instructions.,
+Another No Image,"['butter', 'sugar']",Just mix.,
