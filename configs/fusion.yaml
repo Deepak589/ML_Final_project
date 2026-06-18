@@ -43,7 +43,7 @@ train:
   num_workers: 4
 
 eval:
-  subsets: [1k, 10k]
+  subsets: [1k]
   directions: both
   n_folds: 10
   seed: 1234
