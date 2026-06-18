@@ -1,19 +1,19 @@
 # Data pipeline config. Single source of truth for paths + subset params.
 paths:
-  raw: data/raw                 # layer1.json, layer2.json, det_ingrs.json, images/
-  processed: data/processed     # generated index + caches (gitignored)
-  layer1: data/raw/layer1.json
-  layer2: data/raw/layer2.json
-  det_ingrs: data/raw/det_ingrs.json
-  images: data/raw/images
+  raw: data/raw
+  processed: data/processed
+  kaggle_csv: data/raw/Food Ingredients and Recipe Dataset with Image Name Mapping.csv
+  images: data/raw/Food Images
 
 subset:
-  n_recipes: 2000               # smoke value; bump to 50000 for real run
-  require_image: true           # keep only recipes with >=1 local image
+  n_recipes: 2000               # smoke value; bump to 10000 for real run
+  require_image: true           # keep only recipes with a non-empty image name
   seed: 42
 
 splits:
-  use_partition_field: true     # use Recipe1M layer1 'partition' (no id leak)
+  train_frac: 0.80
+  val_frac: 0.10
+  test_frac: 0.10
 
 text:
   ingr_max_tokens: 24
@@ -26,5 +26,5 @@ image:
   feat_dim: 512
 
 semantic:
-  enabled: true                 # coarse title-keyword category labels
-  n_categories: 20              # coarse buckets (v1 simplification)
+  enabled: true
+  n_categories: 20
