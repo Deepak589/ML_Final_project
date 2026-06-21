@@ -1,6 +1,7 @@
 """RecipeDataset: loads cached image features + tokenizes text on-the-fly."""
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 
 import torch
@@ -10,6 +11,8 @@ from transformers import AutoTokenizer
 
 from src.data import kaggle_adapter
 
+_log = logging.getLogger(__name__)
+
 
 class RecipeDataset(Dataset):
     def __init__(self, cfg: DictConfig, partition: str | None = None) -> None:
@@ -17,15 +20,21 @@ class RecipeDataset(Dataset):
         if partition is not None:
             recipes = [r for r in recipes if r["partition"] == partition]
 
+        feat_path = Path(cfg.data.paths.image_feats)
+        if not feat_path.exists():
+            raise FileNotFoundError(
+                f"Image features not found at {feat_path}. "
+                "Run: python -m src.data.precompute_image_feats --config baseline.yaml"
+            )
         feats_dict: dict[str, torch.Tensor] = torch.load(
-            cfg.data.paths.image_feats, weights_only=False
+            feat_path, weights_only=False
         )
 
         before = len(recipes)
         recipes = [r for r in recipes if Path(r["image_path"]).stem in feats_dict]
         dropped = before - len(recipes)
         if dropped:
-            print(f"Dropped {dropped} recipes missing from image_feats")
+            _log.warning("Dropped %d recipes missing from image_feats", dropped)
 
         self.recipes = recipes
         self.feats_dict = feats_dict
@@ -67,4 +76,6 @@ class RecipeDataset(Dataset):
 
 
 def get_split(cfg: DictConfig, partition: str) -> RecipeDataset:
+    if partition not in {"train", "val", "test"}:
+        raise ValueError(f"Unknown partition {partition!r}; expected train/val/test")
     return RecipeDataset(cfg, partition=partition)

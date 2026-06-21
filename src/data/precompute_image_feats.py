@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import logging
 from pathlib import Path
 
 import open_clip
@@ -11,6 +12,8 @@ from PIL import Image
 from tqdm import tqdm
 
 from src.utils.config import load_config, resolve_device
+
+_log = logging.getLogger(__name__)
 
 
 def main(cfg: DictConfig) -> None:
@@ -22,7 +25,7 @@ def main(cfg: DictConfig) -> None:
     jpg_paths = sorted(images_dir.glob("*.jpg"))
     if not jpg_paths:
         raise FileNotFoundError(f"No .jpg files found in {images_dir}")
-    print(f"Found {len(jpg_paths)} images in {images_dir}")
+    _log.info("Found %d images in %s", len(jpg_paths), images_dir)
 
     model, _, preprocess = open_clip.create_model_and_transforms(
         cfg.data.image.clip_model,
@@ -42,7 +45,7 @@ def main(cfg: DictConfig) -> None:
                 imgs.append(preprocess(Image.open(p).convert("RGB")))
                 stems.append(p.stem)
             except Exception as exc:
-                print(f"Warning: skipping {p.name}: {exc}")
+                _log.warning("Skipping %s: %s", p.name, exc)
                 skipped += 1
         if not imgs:
             continue
@@ -55,7 +58,7 @@ def main(cfg: DictConfig) -> None:
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     torch.save(feats_dict, out_path)
-    print(f"Saved {len(feats_dict)} features to {out_path} (skipped {skipped})")
+    _log.info("Saved %d features to %s (skipped %d)", len(feats_dict), out_path, skipped)
 
 
 if __name__ == "__main__":
