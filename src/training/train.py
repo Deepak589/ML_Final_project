@@ -93,6 +93,7 @@ def main() -> None:
     set_seed(cfg.seed)
     device = resolve_device(cfg.device)
     amp_enabled = cfg.train.amp and device == "cuda"
+    autocast_device = "cuda" if device == "cuda" else "cpu"
 
     run_dir = Path(cfg.log.dir) / cfg.exp_name
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -134,7 +135,7 @@ def main() -> None:
         optimizer.zero_grad()
         for step, batch in enumerate(train_loader):
             batch = _move_batch(batch, device)
-            with autocast("cuda", enabled=amp_enabled):
+            with autocast(autocast_device, enabled=amp_enabled):
                 image_emb, recipe_emb = model(batch)
                 loss = criterion(image_emb, recipe_emb) / cfg.train.grad_accum
             scaler.scale(loss).backward()

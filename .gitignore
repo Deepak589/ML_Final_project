@@ -22,3 +22,5 @@ venv/
 # os / editor
 .DS_Store
 .ipynb_checkpoints/
+.claude
+.idea/
