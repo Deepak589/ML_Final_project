@@ -43,7 +43,8 @@ def load(cfg: DictConfig) -> list[dict]:
     rng = np.random.default_rng(cfg.subset.seed)
     idx = rng.permutation(len(df))
     df = df.iloc[idx].reset_index(drop=True)
-    df = df.iloc[: cfg.subset.n_recipes]
+    if cfg.subset.n_recipes > 0:
+        df = df.iloc[: cfg.subset.n_recipes]
 
     recipes = []
     for row_idx, row in df.iterrows():
